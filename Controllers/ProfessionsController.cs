@@ -23,7 +23,7 @@ namespace ProfessionFormApp.Controllers
         }
 
         // GET: Professions
-        public IActionResult Index(string sortOrder, int page = 1, int pageSize = 10)
+        public IActionResult Index(string searchString, string sortOrder, int page = 1, int pageSize = 10)
         {
 
             ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -32,6 +32,11 @@ namespace ProfessionFormApp.Controllers
             var professionsList = _context.Professions
                 .Include(p => p.People)
                 .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                professionsList = professionsList.Where(p => p.Name.Contains(searchString));
+            }
 
             switch (sortOrder)
             {
