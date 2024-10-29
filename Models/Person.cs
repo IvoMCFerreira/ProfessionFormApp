@@ -8,13 +8,13 @@ namespace PersonProfessionApp.Models
         public int Id { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         public int Age { get; set; }
 
         public int? ProfessionId { get; set; }
 
         [ForeignKey("ProfessionId")]
-        public Profession Profession { get; set; }
+        public Profession? Profession { get; set; }
     }
 }
