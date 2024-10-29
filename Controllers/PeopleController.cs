@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PersonProfessionApp.Models;
 using ProfessionFormApp.Models;
+using X.PagedList;
+using X.PagedList.Extensions;
+using X.PagedList.Mvc.Core;
 
 namespace ProfessionFormApp.Controllers
 {
@@ -20,11 +23,16 @@ namespace ProfessionFormApp.Controllers
         }
 
         // GET: People
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
-            var appDbContext = _context.People.Include(p => p.Profession);
-            return View(await appDbContext.ToListAsync());
+            var peopleList = _context.People
+                .Include(p => p.Profession)
+                .AsQueryable();
+
+            var pagedList = peopleList.ToPagedList(pageNumber, pageSize);
+            return View(pagedList);
         }
+
 
         // GET: People/Details/5
         public async Task<IActionResult> Details(int? id)
