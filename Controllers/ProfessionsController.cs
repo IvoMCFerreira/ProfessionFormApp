@@ -23,11 +23,31 @@ namespace ProfessionFormApp.Controllers
         }
 
         // GET: Professions
-        public IActionResult Index(int page = 1, int pageSize = 10)
+        public IActionResult Index(string sortOrder, int page = 1, int pageSize = 10)
         {
+
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["IdSortParam"] = sortOrder == "Id" ? "id_desc" : "Id";
+
             var professionsList = _context.Professions
                 .Include(p => p.People)
                 .AsQueryable();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    professionsList = professionsList.OrderByDescending(p => p.Name);
+                    break;
+                case "Id":
+                    professionsList = professionsList.OrderBy(p => p.Id);
+                    break;
+                case "id_desc":
+                    professionsList = professionsList.OrderByDescending(p => p.Id);
+                    break;
+                default: // ASC
+                    professionsList = professionsList.OrderBy(p => p.Name);
+                    break;
+            }
 
             var pagedList = professionsList.ToPagedList(page, pageSize);
             return View(pagedList);
