@@ -23,15 +23,43 @@ namespace ProfessionFormApp.Controllers
         }
 
         // GET: People
-        public IActionResult Index(int page = 1, int pageSize = 10)
+        public IActionResult Index(string sortOrder, int page = 1, int pageSize = 10)
         {
+            
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["AgeSortParam"] = sortOrder == "Age" ? "age_desc" : "Age";
+            ViewData["ProfessionSortParam"] = sortOrder == "Profession" ? "profession_desc" : "Profession";
+
             var peopleList = _context.People
-                .Include(p => p.Profession)
+                .Include(p => p.Profession) 
                 .AsQueryable();
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    peopleList = peopleList.OrderByDescending(p => p.Name);
+                    break;
+                case "Age":
+                    peopleList = peopleList.OrderBy(p => p.Age);
+                    break;
+                case "age_desc":
+                    peopleList = peopleList.OrderByDescending(p => p.Age);
+                    break;
+                case "Profession":
+                    peopleList = peopleList.OrderBy(p => p.Profession.Name); // Sort by Profession Name
+                    break;
+                case "profession_desc":
+                    peopleList = peopleList.OrderByDescending(p => p.Profession.Name); // Sort by Profession Name descending
+                    break;
+                default: // ASC
+                    peopleList = peopleList.OrderBy(p => p.Name);
+                    break;
+            }
 
             var pagedList = peopleList.ToPagedList(page, pageSize);
             return View(pagedList);
         }
+
 
 
         // GET: People/Details/5
