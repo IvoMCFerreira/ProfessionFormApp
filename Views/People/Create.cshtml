@@ -24,7 +24,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProfessionId" class="control-label"></label>
-                <select asp-for="ProfessionId" class ="form-control" asp-items="ViewBag.ProfessionId"></select>
+                <select asp-for="ProfessionId" class="form-control" asp-items="@(ViewData["ProfessionId"] as IEnumerable<SelectListItem>)"></select>
+                <span asp-validation-for="ProfessionId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
