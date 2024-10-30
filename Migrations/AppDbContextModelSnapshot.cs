@@ -35,8 +35,7 @@ namespace ProfessionFormApp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ProfessionId")
                         .HasColumnType("int");
@@ -58,8 +57,7 @@ namespace ProfessionFormApp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -69,16 +67,10 @@ namespace ProfessionFormApp.Migrations
             modelBuilder.Entity("PersonProfessionApp.Models.Person", b =>
                 {
                     b.HasOne("PersonProfessionApp.Models.Profession", "Profession")
-                        .WithMany("People")
-                        .HasForeignKey("ProfessionId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .WithMany()
+                        .HasForeignKey("ProfessionId");
 
                     b.Navigation("Profession");
-                });
-
-            modelBuilder.Entity("PersonProfessionApp.Models.Profession", b =>
-                {
-                    b.Navigation("People");
                 });
 #pragma warning restore 612, 618
         }
